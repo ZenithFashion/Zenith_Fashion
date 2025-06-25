@@ -1,0 +1,136 @@
+/* Reset dan font */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Header dan Navigasi */
+header {
+  background-color: #111;
+  color: #fff;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+nav {
+  margin-top: 1rem;
+}
+nav a {
+  color: #fff;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+nav a:hover {
+  color: #f4c10f;
+}
+
+/* Main dan Layout */
+main {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Produk */
+#kategoriTabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+#kategoriTabs button {
+  padding: 10px 20px;
+  background-color: #111;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+#kategoriTabs button:hover {
+  background-color: #f4c10f;
+  color: #000;
+}
+
+.produk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  padding: 1rem;
+  text-align: center;
+  transition: 0.3s;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.card img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+.card h3 {
+  margin: 0.5rem 0;
+}
+.card p {
+  color: #f4c10f;
+  font-weight: bold;
+}
+.card .btn {
+  margin-top: 0.5rem;
+  padding: 8px 16px;
+  border: none;
+  background-color: #111;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.card .btn:hover {
+  background-color: #f4
+
+.slider-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+.slider {
+  display: flex;
+  width: 300%;
+  animation: slide 12s infinite;
+}
+.slide {
+  width: 100%;
+  object-fit: cover;
+}
+
+@keyframes slide {
+  0% { transform: translateX(0%); }
+  33% { transform: translateX(0%); }
+  36% { transform: translateX(-100%); }
+  66% { transform: translateX(-100%); }
+  69% { transform: translateX(-200%); }
+  100% { transform: translateX(-200%); }
+}

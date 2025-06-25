@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kontak - Zenith Fashion</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <h1>Zenith Fashion</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="produk.html">Produk</a>
+	  <a href="tentang.html">Tentang</a>
+      <a href="testimoni.html">Testimoni</a>
+	  <a href="kontak.html">Kontak</a>
+      <a href="alamat.html">Alamat</a>
+	  <a href="profil.html">Profil</a>
+      <a href="login.html">Login</a>
+	   <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section style="text-align: center; margin-bottom: 2rem;">
+      <h2>Hubungi Kami</h2>
+      <p style="font-size: 1.1rem;">Kami siap membantu Anda. Silakan hubungi kami melalui formulir di bawah ini atau lewat media sosial.</p>
+    </section>
+
+    <!-- Form Kontak -->
+<section>
+  <form action="kirim.php" method="POST">
+    <label>Nama:
+      <input type="text" name="nama" required placeholder="Nama lengkap Anda">
+    </label>
+    <label>Email:
+      <input type="email" name="email" required placeholder="email@example.com">
+    </label>
+    <label>Pesan:
+      <textarea name="pesan" rows="5" required placeholder="Tulis pesan Anda di sini..." style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+    </label>
+    <button type="submit">Kirim Pesan</button>
+  </form>
+</section>
+
+
+    <!-- Info Kontak Langsung -->
+    <section style="margin-top: 3rem;">
+      <h3>Kontak Langsung</h3>
+      <ul style="line-height: 1.8;">
+        <li>Email: <a href="mailto:zenithfashion@email.com">zenithfashion@email.com</a></li>
+        <li>WhatsApp: <a href="https://wa.me/+6285147164246" target="_blank">+62 851 4716 4246</a></li>
+        <li>Instagram: <a href="https://www.instagram.com/zenith._olshop/" target="_blank">@zenithfashion</a></li>
+        <li>TikTok: <a href="https://www.tiktok.com/zenith.olshop/" target="_blank">@zenithfashion</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Zenith Fashion
+  </footer>
+
+</body>
+</html>

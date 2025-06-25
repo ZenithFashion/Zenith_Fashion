@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Profil Saya - Zenith Fashion</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <h1>Zenith Fashion</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="produk.html">Produk</a>
+      <a href="profil.html">Profil</a> <!-- Diperbaiki dari 'profile.html' -->
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section style="text-align: center;">
+      <h2>Profil Pengguna</h2>
+      <div id="userInfo"></div>
+
+      <h3>Upload Foto Profil</h3>
+      <input type="file" id="fotoProfil" accept="image/*"><br><br>
+      <button onclick="uploadFoto()">Upload</button>
+    </section>
+  </main>
+
+  <footer>&copy; 2025 Zenith Fashion</footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <script>
+    // Konfigurasi Firebase
+    const firebaseConfig = {
+      apiKey: "API_KEY",
+      authDomain: "PROJECT_ID.firebaseapp.com",
+      projectId: "PROJECT_ID",
+      storageBucket: "PROJECT_ID.appspot.com",
+      appId: "APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const storage = firebase.storage();
+
+    // Tampilkan info pengguna
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById('userInfo').innerHTML = `
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Status Verifikasi:</strong> ${user.emailVerified ? '✔️ Terverifikasi' : '❌ Belum Verifikasi'}</p>
+          ${user.photoURL ? `<img src="${user.photoURL}" width="100" style="border-radius: 50%;">` : '<p>Belum ada foto profil</p>'}
+        `;
+      } else {
+        alert('Anda belum login!');
+        window.location.href = 'login.html';
+      }
+    });
+
+    // Upload foto profil ke Firebase Storage dan update profile
+    function uploadFoto() {
+      const fileInput = document.getElementById('fotoProfil');
+      const file = fileInput.files[0];
+
+      if (!file) return alert('Pilih gambar terlebih dahulu.');
+      
+      // Validasi ukuran (maks 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        return alert("Ukuran gambar maksimal 2MB.");
+      }
+
+      const user = auth.currentUser;
+      const storageRef = storage.ref(`profil/${user.uid}.jpg`);
+
+      storageRef.put(file)
+        .then(() => storageRef.getDownloadURL())
+        .then(url => {
+          return user.updateProfile({ photoURL: url });
+        })
+        .then(() => {
+          alert('Foto profil berhasil diunggah!');
+          location.reload();
+        })
+        .catch(error => {
+          console.error('Gagal upload foto:', error);
+          alert('Gagal upload foto, silakan coba lagi.');
+        });
+    }
+
+    // Fungsi logout
+    function logout() {
+      auth.signOut()
+        .then(() => {
+          alert('Logout berhasil!');
+          window.location.href = 'login.html';
+        });
+    }
+  </script>
+
+</body>
+</html>

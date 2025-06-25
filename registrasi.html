@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrasi - Zenith Fashion</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <h1>Zenith Fashion</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="produk.html">Produk</a>
+	  <a href="tentang.html">Tentang</a>
+      <a href="testimoni.html">Testimoni</a>
+	  <a href="kontak.html">Kontak</a>
+      <a href="alamat.html">Alamat</a>
+      <a href="login.html">Login</a>
+	  <a href="profil.html">Profil</a>
+    </nav>
+  </header>
+
+  <main>
+    <section style="text-align: center; margin-bottom: 2rem;">
+      <h2>Registrasi Pengguna Baru</h2>
+      <p>Silakan daftar untuk mulai berbelanja di Zenith Fashion</p>
+    </section>
+
+    <section>
+      <form onsubmit="daftarAkun(event)">
+        <label>Email:
+          <input type="email" id="regEmail" required>
+        </label>
+        <label>Password:
+          <input type="password" id="regPassword" required>
+        </label>
+        <button type="submit">Daftar</button>
+      </form>
+    </section>
+	<label>Foto Profil:
+  <input type="file" id="regFoto" accept="image/*">
+</label>
+
+  </main>
+
+  <footer>
+    &copy; 2025 Zenith Fashion
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "API_KEY",
+      authDomain: "PROJECT_ID.firebaseapp.com",
+      projectId: "PROJECT_ID",
+      appId: "APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+function daftarAkun(e) {
+  e.preventDefault();
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPassword').value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      user.sendEmailVerification()
+        .then(() => {
+          alert('Registrasi berhasil! Silakan verifikasi email Anda.');
+          window.location.href = "login.html";
+        });
+    })
+    .catch(err => alert('Gagal daftar: ' + err.message));
+}
+
+  </script>
+
+</body>
+</html>

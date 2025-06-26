@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profil Saya - Zenith Fashion</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    .profil-box {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      text-align: center;
+      background-color: #f9f9f9;
+    }
+    .profil-box img {
+      border-radius: 50%;
+      width: 120px;
+      margin-bottom: 10px;
+    }
+    #previewFoto {
+      margin-top: 10px;
+      display: none;
+    }
+    .form-group {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Zenith Fashion</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="produk.html">Produk</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="testimoni.html">Testimoni</a>
+      <a href="kontak.html">Kontak</a>
+      <a href="alamat.html">Alamat</a>
+      <a href="profil.html">Profil</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="profil-box">
+      <h2>Profil Pengguna</h2>
+      <div id="userInfo">Memuat data...</div>
+
+      <div class="form-group" id="editNamaForm" style="display: none;">
+        <label for="namaBaru"><strong>Edit Nama:</strong></label><br>
+        <input type="text" id="namaBaru" placeholder="Nama baru Anda" style="padding: 5px; width: 80%; margin-top: 5px;">
+        <br><br>
+        <button onclick="simpanNama()">Simpan Nama</button>
+      </div>
+
+      <hr style="margin: 20px 0;">
+
+      <h3>Upload Foto Profil</h3>
+      <input type="file" id="fotoProfil" accept="image/*"><br>
+      <img id="previewFoto" src="#" alt="Preview Foto" width="100" />
+      <br><br>
+      <button onclick="uploadFoto()">Upload</button>
+    </section>
+  </main>
+
+  <footer style="text-align:center;">&copy; 2025 Zenith Fashion</footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHpCuSFndUD5tHmhJwqRGpp-a02aFFRzg",
+      authDomain: "zenith-fashion.firebaseapp.com",
+      projectId: "zenith-fashion",
+      storageBucket: "zenith-fashion.appspot.com",
+      messagingSenderId: "951986471719",
+      appId: "1:951986471719:web:a0a63715d8c4d43a7a5f02",
+      measurementId: "G-V61BQCNGK9"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const storage = firebase.storage();
+
+    // Tampilkan data user saat login
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById('userInfo').innerHTML = `
+          ${user.photoURL ? `<img src="${user.photoURL}" alt="Foto Profil">` : '<p>Belum ada foto profil</p>'}
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Nama:</strong> ${user.displayName || '(Belum tersedia)'}</p>
+          <p><strong>Status Verifikasi:</strong> ${user.emailVerified ? '✔️ Terverifikasi' : '❌ Belum Verifikasi'}</p>
+          <button onclick="tampilkanFormEditNama()">✏️ Edit Nama</button>
+        `;
+      } else {
+        alert("Anda belum login.");
+        window.location.href = "login.html";
+      }
+    });
+
+    function tampilkanFormEditNama() {
+      document.getElementById("editNamaForm").style.display = "block";
+    }
+
+    function simpanNama() {
+      const namaBaru = document.getElementById("namaBaru").value.trim();
+      if (namaBaru.length < 3) return alert("Nama minimal 3 karakter.");
+
+      const user = auth.currentUser;
+      user.updateProfile({ displayName: namaBaru })
+        .then(() => {
+          alert("Nama berhasil diperbarui!");
+          location.reload();
+        })
+        .catch(error => {
+          console.error(error);
+          alert("Gagal memperbarui nama.");
+        });
+    }
+
+    // Preview sebelum upload
+    document.getElementById('fotoProfil').addEventListener('change', function () {
+      const file = this.files[0];
+      const preview = document.getElementById('previewFoto');
+      if (file && file.type.startsWith('image/')) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+    });
+
+    // Upload foto ke Firebase Storage
+    function uploadFoto() {
+      const file = document.getElementById('fotoProfil').files[0];
+      if (!file) return alert('Pilih gambar terlebih dahulu.');
+      if (!file.type.startsWith('image/')) return alert('Hanya file gambar yang diperbolehkan.');
+      if (file.size > 2 * 1024 * 1024) return alert('Ukuran maksimal 2MB.');
+
+      const user = auth.currentUser;
+      const ref = storage.ref(`profil/${user.uid}.jpg`);
+      ref.put(file)
+        .then(() => ref.getDownloadURL())
+        .then(url => user.updateProfile({ photoURL: url }))
+        .then(() => {
+          alert("Foto profil berhasil diperbarui!");
+          location.reload();
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Gagal upload foto.");
+        });
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        alert("Logout berhasil.");
+        window.location.href = "login.html";
+      });
+    }
+  </script>
+
+</body>
+</html>

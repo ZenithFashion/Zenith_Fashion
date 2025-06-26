@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Zenith Fashion</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>Zenith Fashion</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="produk.html">Produk</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="testimoni.html">Testimoni</a>
+      <a href="kontak.html">Kontak</a>
+      <a href="alamat.html">Alamat</a>
+      <a href="profil.html">Profil</a>
+      <a href="login.html">Login</a>
+      <a href="#" onclick="logout()" id="logoutBtn" style="display: none;">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <section style="text-align: center; margin-bottom: 2rem;">
+      <h2>Masuk ke Akun Anda</h2>
+      <p>Gunakan email & password atau login dengan media sosial</p>
+    </section>
+
+    <!-- Form Login -->
+    <section style="max-width: 400px; margin: auto;">
+      <form onsubmit="loginEmailPassword(event)">
+        <label>Email:
+          <input type="email" id="email" required placeholder="email@example.com" />
+        </label><br><br>
+        <label>Password:
+          <input type="password" id="password" required placeholder="••••••••" />
+        </label><br><br>
+        <button type="submit">Masuk</button>
+      </form>
+
+      <div id="message" style="color: red; margin-top: 1rem;"></div>
+
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="#" onclick="lupaPassword()">Lupa Password?</a>
+        <br><br>
+        <button onclick="loginGoogle()" class="btn" style="background-color:#db4437; color:white;">Login dengan Google</button><br><br>
+        <button onclick="loginFacebook()" class="btn" style="background-color:#3b5998; color:white;">Login dengan Facebook</button>
+        <p style="margin-top: 1.5rem;">Belum punya akun? <a href="registrasi.html">Daftar di sini</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Zenith Fashion
+  </footer>
+
+  <script>
+    // Firebase config (isi sesuai dengan Firebase project kamu)
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBHpCuSFndUD5tHmhJwqRGpp-a02aFFRzg",
+  authDomain: "zenith-fashion.firebaseapp.com",
+  projectId: "zenith-fashion",
+  storageBucket: "zenith-fashion.firebasestorage.app",
+  messagingSenderId: "951986471719",
+  appId: "1:951986471719:web:a0a63715d8c4d43a7a5f02",
+  measurementId: "G-V61BQCNGK9"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+    // Tampilkan tombol logout jika user login
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById("logoutBtn").style.display = "inline";
+      }
+    });
+
+    // Login dengan email dan password
+    function loginEmailPassword(e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const messageDiv = document.getElementById("message");
+
+      if (!email || !password) {
+        messageDiv.textContent = "Email dan password wajib diisi.";
+        return;
+      }
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          messageDiv.style.color = "green";
+          messageDiv.textContent = "Login berhasil! Mengalihkan...";
+          setTimeout(() => window.location.href = "profil.html", 1500);
+        })
+        .catch(error => {
+          messageDiv.style.color = "red";
+          messageDiv.textContent = "Gagal login: " + error.message;
+        });
+    }
+
+    // Lupa password
+    function lupaPassword() {
+      const email = prompt("Masukkan email Anda untuk reset password:");
+      if (email) {
+        auth.sendPasswordResetEmail(email)
+          .then(() => alert("Link reset telah dikirim ke email Anda."))
+          .catch(error => alert("Gagal mengirim email: " + error.message));
+      }
+    }
+
+    // Login dengan Google
+    function loginGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => window.location.href = "profil.html")
+        .catch(err => alert("Gagal login Google: " + err.message));
+    }
+
+    // Login dengan Facebook
+    function loginFacebook() {
+      const provider = new firebase.auth.FacebookAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => window.location.href = "profil.html")
+        .catch(err => alert("Gagal login Facebook: " + err.message));
+    }
+
+    // Logout
+    function logout() {
+      auth.signOut()
+        .then(() => {
+          alert("Logout berhasil!");
+          window.location.href = "login.html";
+        });
+    }
+  </script>
+</body>
+</html>
